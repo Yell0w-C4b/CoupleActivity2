@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Couple Activities Survey</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 18px;
+            padding: 40px 32px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        h1 { text-align: center; font-size: 32px; font-weight: 600; margin-bottom: 8px; }
+        .intro { text-align: center; color: #86868b; margin-bottom: 32px; font-size: 15px; }
+        .scale-legend {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            font-size: 13px;
+        }
+        .scale-legend h3 { font-size: 15px; margin-bottom: 12px; }
+        .scale-legend strong { color: #1d1d1f; }
+        .scale-legend div { padding: 6px 0; color: #86868b; }
+        .partner-selection {
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        .partner-selection h2 { color: white; margin-bottom: 16px; font-size: 19px; }
+        .partner-buttons { display: flex; gap: 12px; }
+        .partner-btn {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .partner-btn:hover { background: rgba(255,255,255,0.25); }
+        .partner-btn.active { background: white; color: #34c759; }
+        .file-upload-section {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .file-upload-section h3 { font-size: 17px; margin-bottom: 12px; }
+        .file-upload-section p { font-size: 13px; color: #86868b; margin-bottom: 16px; }
+        input[type="file"] { display: none; }
+        .file-label {
+            display: inline-block;
+            padding: 12px 24px;
+            background: white;
+            color: #34c759;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .question-card {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .question-title { font-size: 15px; font-weight: 500; margin-bottom: 16px; }
+        .slider-group { margin-bottom: 16px; }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .slider-label { font-size: 13px; color: #86868b; }
+        .slider-controls { display: flex; gap: 8px; align-items: center; }
+        .slider-value {
+            background: #34c759;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            min-width: 36px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .unsure-btn {
+            padding: 4px 12px;
+            background: #ff9500;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .unsure-btn.active { background: #ff6b00; }
+        input[type="range"] {
+            width: 100%;
+            height: 32px;
+            -webkit-appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-track {
+            width: 100%;
+            height: 4px;
+            background: #d2d2d7;
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 0.5px solid rgba(0,0,0,0.04);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        input[type="range"].disabled { opacity: 0.3; pointer-events: none; }
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #86868b;
+        }
+        .category-header {
+            background: #1d1d1f;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 40px 0 20px 0;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .primary-btn { background: #34c759; color: white; }
+        .secondary-btn { background: #f5f5f7; color: #34c759; }
+        .hidden { display: none; }
+        .comparison-view { margin-top: 32px; }
+        .comparison-card { background: #f5f5f7; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+        .comparison-title { font-size: 15px; font-weight: 500; margin-bottom: 16px; }
+        .comparison-bars { display: flex; flex-direction: column; gap: 12px; }
+        .partner-bar { display: flex; align-items: center; gap: 12px; }
+        .partner-name { font-size: 12px; min-width: 90px; color: #86868b; }
+        .bar-container { flex: 1; height: 28px; background: white; border-radius: 8px; overflow: hidden; }
+        .bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .bar-fill.partner1 { background: linear-gradient(90deg, #34c759 0%, #30d158 100%); }
+        .bar-fill.partner2 { background: linear-gradient(90deg, #5856d6 0%, #007aff 100%); }
+        .match-indicator {
+            text-align: center;
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .match-high { background: #d1f2eb; color: #00c896; }
+        .match-medium { background: #fff3cd; color: #ff9500; }
+        .match-low { background: #ffe5e5; color: #ff3b30; }
+        .summary-stats {
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+        }
+        .summary-stats h3 { margin-bottom: 16px; font-size: 19px; }
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Couple Activities</h1>
+        <div class="intro">Discover new activities to enjoy together</div>
+
+        <div class="scale-legend">
+            <h3>📊 Scale Explanation</h3>
+            <div><strong>My Interest:</strong> 0=Dislike | 5=Neutral | 10=Love it</div>
+            <div><strong>If Partner Wants:</strong> 0=Won't do (Boundary) | 5=Don't care | 10=Happy to</div>
+            <div style="padding-top:8px">💡 Click "Unsure" if you don't know yet</div>
+        </div>
+
+        <div class="partner-selection" id="partnerSelection">
+            <h2>Who are you?</h2>
+            <div class="partner-buttons">
+                <button class="partner-btn" onclick="selectPartner('p1')">Partner 1</button>
+                <button class="partner-btn" onclick="selectPartner('p2')">Partner 2</button>
+            </div>
+        </div>
+
+        <div class="file-upload-section">
+            <h3>Import Partner's Results</h3>
+            <p>Upload their results file to compare.</p>
+            <input type="file" id="fileInput" accept=".json" onchange="importResults(event)">
+            <label for="fileInput" class="file-label">Choose File</label>
+            <span id="fileName" style="margin-left:12px;font-size:13px;color:#86868b;"></span>
+        </div>
+
+        <form id="surveyForm"></form>
+
+        <div class="actions">
+            <button class="primary-btn" onclick="exportResults()">Export My Results</button>
+            <button class="primary-btn" onclick="showComparison()">Compare Results</button>
+            <button class="secondary-btn" onclick="window.print()">Print</button>
+        </div>
+
+        <div id="comparisonView" class="comparison-view hidden">
+            <button class="secondary-btn" onclick="backToSurvey()">← Back</button>
+            <div class="summary-stats" id="summaryStats"></div>
+            <div id="comparisonResults"></div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {cat: "🏃 Sports & Outdoor", items: [
+                "Rock climbing / bouldering", "Hiking / nature walks", "Cycling / bike tours",
+                "Running / jogging together", "Kayaking / canoeing", "Skiing / snowboarding",
+                "Camping / outdoor overnight", "Beach volleyball"
+            ]},
+            {cat: "🎨 Arts & Culture", items: [
+                "Art galleries / exhibitions", "Theater / plays", "Concerts / live music",
+                "Dance classes (salsa, tango)", "Photography walks", "Pottery / art workshops"
+            ]},
+            {cat: "🍽️ Food & Culinary", items: [
+                "Trying new restaurants", "Baking together", "Wine tasting / vineyards",
+                "Cooking classes", "Farmers market trips"
+            ]},
+            {cat: "📚 Learning & Classes", items: [
+                "Language learning together", "Musical instrument lessons", "Book club / reading together",
+                "Online courses / new skills"
+            ]},
+            {cat: "🎮 Games & Entertainment", items: [
+                "Board game nights", "Video games (co-op)", "Escape rooms / puzzles",
+                "Karaoke nights", "Bowling / arcade"
+            ]},
+            {cat: "🧘 Relaxation & Wellness", items: [
+                "Yoga / meditation classes", "Spa day / couples massage", "Hot springs / thermal baths",
+                "Stargazing / astronomy"
+            ]},
+            {cat: "🎢 Adventure & Thrills", items: [
+                "Amusement parks / coasters", "Skydiving / paragliding", "Scuba diving / snorkeling",
+                "Zip-lining / rope courses"
+            ]},
+            {cat: "✈️ Travel & Exploration", items: [
+                "Weekend road trips", "Backpacking / budget travel", "Luxury hotels / resorts",
+                "City exploration / tourism", "Cultural immersion trips"
+            ]},
+            {cat: "🏠 Home & DIY", items: [
+                "Home improvement / DIY", "Gardening / growing plants", "Interior decorating",
+                "Home movie nights (projector)"
+            ]},
+            {cat: "👫 Social & Community", items: [
+                "Volunteer work together", "Double dates with friends", "Hosting dinner parties",
+                "Attending social events", "Visiting each other's families"
+            ]}
+        ];
+
+        let currentPartner = null;
+        let myData = {};
+        let partnerData = {};
+        let unsureFlags = {};
+        let qIndex = 0;
+
+        function renderQuestions() {
+            const form = document.getElementById('surveyForm');
+            let html = '';
+            
+            questions.forEach((category, catIdx) => {
+                html += `<div class="category-header">${category.cat}</div>`;
+                category.items.forEach((question, itemIdx) => {
+                    const qId = `q${qIndex}`;
+                    html += `
+                        <div class="question-card">
+                            <div class="question-title">${question}</div>
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <span class="slider-label">My Interest</span>
+                                    <div class="slider-controls">
+                                        <span class="slider-value">5</span>
+                                        <button type="button" class="unsure-btn" onclick="toggleUnsure(this, '${qId}a')">Unsure</button>
+                                    </div>
+                                </div>
+                                <input type="range" min="0" max="10" value="5" class="slider" data-question="${qId}a">
+                                <div class="scale-labels"><span>Dislike</span><span>Neutral</span><span>Love</span></div>
+                            </div>
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <span class="slider-label">If Partner Wants</span>
+                                    <div class="slider-controls">
+                                        <span class="slider-value">5</span>
+                                        <button type="button" class="unsure-btn" onclick="toggleUnsure(this, '${qId}b')">Unsure</button>
+                                    </div>
+                                </div>
+                                <input type="range" min="0" max="10" value="5" class="slider" data-question="${qId}b">
+                                <div class="scale-labels"><span>Won't do</span><span>Don't care</span><span>Happy to</span></div>
+                            </div>
+                        </div>
+                    `;
+                    qIndex++;
+                });
+            });
+            
+            form.innerHTML = html;
+            
+            document.querySelectorAll('.slider').forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const val = this.closest('.slider-group').querySelector('.slider-value');
+                    if(val) val.textContent = this.value;
+                });
+            });
+        }
+
+        function selectPartner(p) {
+            currentPartner = p;
+            document.querySelectorAll('.partner-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const saved = localStorage.getItem('myActivityResults');
+            if(saved) {
+                const data = JSON.parse(saved);
+                myData = data.data || {};
+                unsureFlags = data.unsure || {};
+                
+                Object.keys(myData).forEach(key => {
+                    const slider = document.querySelector(`[data-question="${key}"]`);
+                    if(slider) {
+                        slider.value = myData[key];
+                        const val = slider.closest('.slider-group').querySelector('.slider-value');
+                        if(val) val.textContent = myData[key];
+                    }
+                });
+                
+                Object.keys(unsureFlags).forEach(key => {
+                    if(unsureFlags[key]) {
+                        const slider = document.querySelector(`[data-question="${key}"]`);
+                        if(slider) {
+                            const btn = slider.closest('.slider-group').querySelector('.unsure-btn');
+                            if(btn) {
+                                btn.classList.add('active');
+                                slider.classList.add('disabled');
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function toggleUnsure(btn, qKey) {
+            const slider = document.querySelector(`[data-question="${qKey}"]`);
+            const isUnsure = btn.classList.toggle('active');
+            if(isUnsure) {
+                slider.classList.add('disabled');
+                unsureFlags[qKey] = true;
+            } else {
+                slider.classList.remove('disabled');
+                delete unsureFlags[qKey];
+            }
+        }
+
+        function exportResults() {
+            if(!currentPartner) {
+                alert('⚠️ Please select who you are first!');
+                return;
+            }
+
+            const results = {};
+            document.querySelectorAll('.slider').forEach(s => {
+                if(!s.classList.contains('disabled')) {
+                    results[s.dataset.question] = parseInt(s.value);
+                }
+            });
+            
+            myData = results;
+            const exportData = {data: results, unsure: unsureFlags};
+            localStorage.setItem('myActivityResults', JSON.stringify(exportData));
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `activities-${currentPartner}-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Results exported!');
+        }
+
+        function importResults(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            
+            document.getElementById('fileName').textContent = file.name;
+            
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const imported = JSON.parse(ev.target.result);
+                    partnerData = imported.data || imported;
+                    alert('✅ Partner results imported!');
+                } catch(err) {
+                    alert('❌ Error reading file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function showComparison() {
+            if(Object.keys(myData).length === 0) {
+                alert('⚠️ Complete the survey first!');
+                return;
+            }
+            if(Object.keys(partnerData).length === 0) {
+                alert('⚠️ Import partner results first!');
+                return;
+            }
+            
+            document.getElementById('surveyForm').classList.add('hidden');
+            document.querySelector('.partner-selection').classList.add('hidden');
+            document.querySelector('.file-upload-section').classList.add('hidden');
+            document.querySelector('.actions').classList.add('hidden');
+            document.getElementById('comparisonView').classList.remove('hidden');
+            
+            generateComparison();
+        }
+
+        function backToSurvey() {
+            document.getElementById('surveyForm').classList.remove('hidden');
+            document.querySelector('.partner-selection').classList.remove('hidden');
+            document.querySelector('.file-upload-section').classList.remove('hidden');
+            document.querySelector('.actions').classList.remove('hidden');
+            document.getElementById('comparisonView').classList.add('hidden');
+        }
+
+        function generateComparison() {
+            const cards = document.querySelectorAll('.question-card');
+            let html = '';
+            let totalMatch = 0;
+            let highMatches = 0;
+            let counted = 0;
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.question-title').textContent;
+                const qKey = card.querySelector('.slider').dataset.question.replace('a','').replace('b','');
+                
+                const myInt = myData[qKey + 'a'];
+                const myWil = myData[qKey + 'b'];
+                const pInt = partnerData[qKey + 'a'];
+                const pWil = partnerData[qKey + 'b'];
+                
+                if(myInt === undefined || myWil === undefined || pInt === undefined || pWil === undefined) return;
+                
+                counted++;
+                const comp1 = Math.min(myInt, pWil);
+                const comp2 = Math.min(pInt, myWil);
+                const avg = (comp1 + comp2) / 2;
+                totalMatch += avg;
+                
+                let mClass = 'match-low', mText = 'Low';
+                if(avg >= 7) { mClass = 'match-high'; mText = 'High'; highMatches++; }
+                else if(avg >= 4) { mClass = 'match-medium'; mText = 'Medium'; }
+                
+                html += `
+                    <div class="comparison-card">
+                        <div class="comparison-title">${title}</div>
+                        <div class="comparison-bars">
+                            <div class="partner-bar">
+                                <span class="partner-name">You (Int)</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill partner1" style="width:${myInt*10}%">${myInt}</div>
+                                </div>
+                            </div>
+                            <div class="partner-bar">
+                                <span class="partner-name">You (Wil)</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill partner1" style="width:${myWil*10}%">${myWil}</div>
+                                </div>
+                            </div>
+                            <div class="partner-bar">
+                                <span class="partner-name">Partner (Int)</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill partner2" style="width:${pInt*10}%">${pInt}</div>
+                                </div>
+                            </div>
+                            <div class="partner-bar">
+                                <span class="partner-name">Partner (Wil)</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill partner2" style="width:${pWil*10}%">${pWil}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="match-indicator ${mClass}">${mText} compatibility (${avg.toFixed(1)}/10)</div>
+                    </div>
+                `;
+            });
+            
+            const avgPct = counted > 0 ? ((totalMatch / (counted * 10)) * 100).toFixed(1) : 0;
+            
+            document.getElementById('summaryStats').innerHTML = `
+                <h3>Compatibility Summary</h3>
+                <div class="stat-item">
+                    <span>Overall Compatibility</span>
+                    <strong>${avgPct}%</strong>
+                </div>
+                <div class="stat-item">
+                    <span>High Matches</span>
+                    <strong>${highMatches} / ${counted}</strong>
+                </div>
+            `;
+            
+            document.getElementById('comparisonResults').innerHTML = html;
+            window.scrollTo(0, 0);
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>
